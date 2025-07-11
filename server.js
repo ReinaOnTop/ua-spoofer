@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-  res.sendFile('index.html', { root: 'public' });
+  res.sendFile('index.html', { root: 'ua-spoofer/public' });
 });
 
 app.get('/browse', async (req, res) => {
