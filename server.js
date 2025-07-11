@@ -1,18 +1,21 @@
 const express = require('express');
 const fetch = require('node-fetch');
-const path = require('path');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static('public'));
 
+app.get('/', (req, res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
+
 app.get('/browse', async (req, res) => {
-  const { url, ua } = req.query;
+  const { url, ua, ip } = req.query;
   try {
     const response = await fetch(decodeURIComponent(url), {
       headers: {
-        'User-Agent': decodeURIComponent(ua)
+        'User-Agent': decodeURIComponent(ua),
+        'X-Forwarded-For': decodeURIComponent(ip)
       }
     });
     const html = await response.text();
@@ -23,5 +26,5 @@ app.get('/browse', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
