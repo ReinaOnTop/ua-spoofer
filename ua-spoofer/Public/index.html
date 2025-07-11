@@ -1,24 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>User-Agent Spoofer</title>
+  <meta charset="UTF-8">
+  <title>UA & IP Spoofer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1f1f1f;
+      color: #f0f0f0;
+      padding: 20px;
+    }
+    input, select, button {
+      font-size: 1em;
+      margin-bottom: 10px;
+      padding: 8px;
+      width: 100%;
+      max-width: 600px;
+    }
+    iframe {
+      border: 1px solid #444;
+      margin-top: 20px;
+    }
+    h2 {
+      color: #FFD0EC;
+    }
+    label {
+      margin-top: 10px;
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <h2>User-Agent Spoofing Browser</h2>
+  <h2>User-Agent & IP Spoofing Browser</h2>
   <form id="spoofForm">
-    <input type="text" id="url" placeholder="Enter website URL" size="50"><br><br>
-    <input type="text" id="ua" placeholder="Enter custom User-Agent" size="50"><br><br>
-    <button type="submit">Browse with Spoofed UA</button>
+    <label for="preset">Select a User-Agent:</label>
+    <select id="preset">
+      <option value="custom">-- Custom --</option>
+      <option value="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1">iPhone Safari (iOS 17)</option>
+      <option value="Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Mobile Safari/537.36">Android Chrome (Pixel 7)</option>
+      <option value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36">Windows Chrome</option>
+      <option value="Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15">macOS Safari</option>
+      <option value="Mozilla/5.0 (SMART-TV; Linux; Tizen 6.0) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/5.0 TV Safari/537.36">Smart TV</option>
+      <option value="Mozilla/5.0 (PlayStation 5 3.21) AppleWebKit/605.1.15 (KHTML, like Gecko)">PlayStation 5</option>
+    </select>
+
+    <label for="ua">User-Agent (editable):</label>
+    <input type="text" id="ua" placeholder="Enter or select a User-Agent">
+
+    <label for="ipPreset">Select a fake IP (or custom):</label>
+    <select id="ipPreset">
+      <option value="custom">-- Custom --</option>
+      <option value="1.1.1.1">Cloudflare (1.1.1.1)</option>
+      <option value="8.8.8.8">Google DNS (8.8.8.8)</option>
+      <option value="185.199.108.153">GitHub Pages</option>
+      <option value="142.250.190.14">Googlebot</option>
+    </select>
+
+    <label for="ip">Fake IP (editable):</label>
+    <input type="text" id="ip" placeholder="Enter or select an IP">
+
+    <label for="url">Website URL:</label>
+    <input type="text" id="url" placeholder="https://example.com">
+
+    <button type="submit">Open with Spoofed UA & IP</button>
   </form>
-  <hr>
+
   <iframe id="browser" width="100%" height="600px"></iframe>
 
   <script>
-    document.getElementById('spoofForm').addEventListener('submit', async function(e) {
+    const preset = document.getElementById('preset');
+    const uaField = document.getElementById('ua');
+    const ipPreset = document.getElementById('ipPreset');
+    const ipField = document.getElementById('ip');
+
+    preset.addEventListener('change', () => {
+      uaField.value = preset.value === 'custom' ? '' : preset.value;
+    });
+
+    ipPreset.addEventListener('change', () => {
+      ipField.value = ipPreset.value === 'custom' ? '' : ipPreset.value;
+    });
+
+    document.getElementById('spoofForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const url = encodeURIComponent(document.getElementById('url').value);
-      const ua = encodeURIComponent(document.getElementById('ua').value);
-      document.getElementById('browser').src = `/browse?url=${url}&ua=${ua}`;
+      const ua = encodeURIComponent(uaField.value);
+      const ip = encodeURIComponent(ipField.value);
+      document.getElementById('browser').src = `/browse?url=${url}&ua=${ua}&ip=${ip}`;
     });
   </script>
 </body>
